@@ -11,6 +11,8 @@ Y PARA CORRER EL PROYECTO Y QUE JALE Tailwind SE DEBEN CORRES LOS COMANDOS "npm 
    -Ir a variables de entorno del sistema y comprobar que en ambos "Path" (el de arriba (variables de usuario) y el de abajo (variables del sistema)) esté la referencia a la versión más alta que se requiere de PHP, y poner la ruta de donde se tenga (Por ej. " C:\laragon\bin\php\php-8.2.19-nts-Win32-vs16-x64 "), si hay una menor reemplazarla por la versión más alta
    -Cerrar todo VS Code y volver a abrir el proyecto, ejecutar comando "php -v" para ver que se haya reflejado el cambio de versión, ir dentro de carpeta del proyecto, y ahora si "composer install"
 
+-comando " npm install "
+
 -Intentar correrlo, con comando "php artisan serve"
  *Si da error de " SQLSTATE[42S02]: Base table or view not found: 1146 Table 'blog.sessions' doesn't exist (Connection: mysql, SQL: select * from `sessions` where `id` = qE1IRW7m32ayuRrxxGvO9tIPz03A3KC5dgMxMf2i limit 1) "
    -Ejecutar comando "php artisan migrate"
