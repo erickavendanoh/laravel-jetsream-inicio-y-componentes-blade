@@ -1,0 +1,109 @@
+***Proyecto que se tiene en repositorio y se estará clonando en diferentes lugares. Consideraciones al clonar:
+
+Se debe crear BD "blog" (con Charset/Collection utf8mb4) en MySQL (en local de donde se clone el proyecto).
+*También puede ser el caso que las contraseñas cambien (modificar esa parte en el .env si es necesario)
+
+CUIDAR SIEMPRE QUE SE ESTÉ DENTRO DE CARPETA DEL PROYECTO (comando "cd .\jetstream-inicio-y-componentes-blade\")
+Y PARA CORRER EL PROYECTO Y QUE JALE Tailwind SE DEBEN CORRES LOS COMANDOS "npm run dev" EN UNA TERMINAL Y ABRIR OTRA Y EJECUTAR "php artisan serve"
+
+-Se debe ejecutar comando " composer install " (debemos estar dentro de la carpeta del proyecto (comando "cd .\jetstream-inicio-y-componentes-blade\"))
+ *En caso de que se arroje un error con una lista larga de "problem"'s donde se indica algo de que se requiere una versión mayor de PHP:
+   -Ir a variables de entorno del sistema y comprobar que en ambos "Path" (el de arriba (variables de usuario) y el de abajo (variables del sistema)) esté la referencia a la versión más alta que se requiere de PHP, y poner la ruta de donde se tenga (Por ej. " C:\laragon\bin\php\php-8.2.19-nts-Win32-vs16-x64 "), si hay una menor reemplazarla por la versión más alta
+   -Cerrar todo VS Code y volver a abrir el proyecto, ejecutar comando "php -v" para ver que se haya reflejado el cambio de versión, ir dentro de carpeta del proyecto, y ahora si "composer install"
+
+-Intentar correrlo, con comando "php artisan serve"
+ *Si da error de " SQLSTATE[42S02]: Base table or view not found: 1146 Table 'blog.sessions' doesn't exist (Connection: mysql, SQL: select * from `sessions` where `id` = qE1IRW7m32ayuRrxxGvO9tIPz03A3KC5dgMxMf2i limit 1) "
+   -Ejecutar comando "php artisan migrate"
+
+
+***Para incluirle el Tailwind:
+-Ejecutar comandos:
+  npm install -D tailwindcss postcss autoprefixer
+	npx tailwindcss init -p
+-En archivo "tailwind.config.js" agregar dentro de "content[],": 
+	"./resources/**/*.blade.php",
+  "./resources/**/*.js",
+  "./resources/**/*.vue",
+  "./public/**/*.js"
+-Creamos dentro de carpeta "public" en el proyecto otra carpeta llamada "css" y dentro un archivo llamado "app.css", dentro de ese archivo se agrega:
+	@tailwind base;
+	@tailwind components;
+	@tailwind utilities;
+-Dentro de archivos donde se vaya a emplear Tailwind (o en su caso los archivos de vistas correspondientes a plantillas), dentro de <head> borrar la etiqueta <style> junto con todo su contenido ("/* ! tailwindcss v3.2.4 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;...") que se genera en automático desde que se crea el proyecto de Laravel como tal (y que en teoría corresponde a la implementación de Tailwind en el proyecto). Y en su lugar colocar " @vite('public/css/app.css') "
+-Colocar dentro de alguna vista (que dentro contenga ya esa referencia a Tailwind, o que la plantilla que use (si es el caso) la tenga, y ya empezar a colocar algunos elementos que empleen Tailwind (puede ser por ejemplo el que está de ejemplo en la documentación: "<h1 class="text-3xl font-bold underline">
+    Hello world!
+  </h1>"
+-Para probar que funcione: abrir una terminal y ejecutar el comando "npm run dev", luego abrir otra terminal y ejecutar comando "php artisan serve"
+
+
+
+SI AL MODIFICAR EL .env (A COMO SE PONE POR DEFECTO CUANDO SE CREA EL PROYECTO) CON LOS DATOS DE LA CONEXIÓN A LA BD, SALEN LOS SIGUIENTES ERRORES:
+*" Database file at path [blog] does not exist. Ensure this is an absolute path to the database. (Connection: sqlite, SQL: select * from "sessions" where "id" = pi7heaNsFE1b1d5RxByDoKXtoGFuGeoW5BX7MBb7 limit 1) "
+  -En el .env cambiar lo de " DB_CONNECTION=sqlite " a " DB_CONNECTION=mysql "
+*" SQLSTATE[42S02]: Base table or view not found: 1146 Table 'blog.sessions' doesn't exist (Connection: mysql, SQL: select * from `sessions` where `id` = pi7heaNsFE1b1d5RxByDoKXtoGFuGeoW5BX7MBb7 limit 1) "
+  -Ejecutar comando " php artisan migrate "
+
+
+
+***Jetstream***
+
+Video: 
+https://www.youtube.com/watch?v=8EuErRfP4s4&list=PLZ2ovOgdI-kUKjbS00taEPjTzMrL6jX7w&ab_channel=CodersFree
+
+Documentación Jetstream:
+https://jetstream.laravel.com/introduction.html
+Para instalarlo:
+https://jetstream.laravel.com/installation.html
+*Nota: se requiere tener Node.js instalado también (también por lo de comandos "npm install", "npm run build" de casi al final).
+  https://nodejs.org/en/download/source-code
+
+En cuanto a lo de qué se elegirá para Frontend... si es Livewire se trabajará con PHP y si es Inertia.js será con JS.
+
+*Antes lo que solo se lograba con Vue.js ahora también se puede hacer con Livewire (que emplea Blade (PHP))
+
+Comandos empleados:
+*Primero se creo repo en GitHub, se abrió VS Code, se abre terminal, nos cambiamos a escritorio (" cd .\Desktop\ "), ahora si:
+" git clone https://github.com/erickavendanoh/laravel-jetsream-inicio-y-componentes-blade "
+" node -v " (para ver que Node si esté instalado)
+" composer -v " (para ver que Composer si esté instalado)
+" composer create-project laravel/laravel laravel-jetstream-livewire "
+" cd .\jetstream-inicio-y-componentes-blade\ "
+" php artisan serve "  (para ver que jale)
+" composer require laravel/jetstream "
+" php artisan jetstream:install livewire " (en este caso posteriormente se trabajará con Livewire)
+ *si pregunta si se quieren volver a correr las migraciones porque se agregaron nuevas: poner "y"
+" npm install "
+" npm run build "
+" php artisan migrate "
+
+
+En archivo "jetstream.php" dentro de "config", en parte de " 'features' " hay varias lineas comentadas, que si se descomentan añaden una cierta funcionalidad, por ejemplo:
+" Features::profilePhotos(), " es para que en lugar del nombre salga ya un avatar con las iniciales, y que cuando se edite el perfil se pueda subir una foto de perfil para el avatar
+" Features::teams(['invitations' => true]), " es para administrar los grupos. En el caso de que nuestra página proporcionara algún servicio, esto de los grupos es como en Spotify plan familiar, donde varios eplearian un servicio pero solo a una ersona ("titular de la cuenta") se le cobraría el servicio.
+" Features::api(), " para la parte de cuando se trabajan APIs en Laravel
+
+
+
+***Componentes blade***
+
+Hay dos tipos de componentes blade, de clase y anónimos.
+A los de clase se les pueden agregar métodos (en su correspondiente archivo back, .php)
+Los anónimos son para componentes más sencillos, que no requieren tanto. Mientras que los de clase si permiten tener un poco más de funcionalidad/complejidad.
+
+Video de componentes de clase: https://www.youtube.com/watch?v=nWlMKLDEht0&ab_channel=CodersFree
+
+Son porciones de código que se repiten a lo largo de la página y se emplean para reciclar ese código. La estructura sería la misma, y ya en base a parámetros la información en cada parte se puede cambiar.
+Ayudan a reutilizar código, además de hacer más mantenible la página, ya que solo modificando directamente el componente se verán reflejados los cambios en donde sea que se utilice.
+
+
+Comando " php artisan make:component Alert ". Se crean dos archivos, uno dentro de resources/views/components (que sería el "front") y otro dentro de app/View/Components (que sería el "back")
+Para ese componente "Alert", se empleará uno de los ejemplos de Alerts que vienen en una página con componentes ya hechos de Tailwind open-source (https://tailwindcomponents.com/), bucar "Alerts" y seleccionar uno donde se vean los alerts, se escogió: https://tailwindcomponents.com/component/tailwind-css-alerts (seleccionar "Show code")
+*IMPORTANTE que cuando se cree un componente la primera letra sea mayúscula (por buenas prácticas y para evitar posibles conflictos al emplear el componente)
+
+Para usar los componentes en las vistas (.blade.php) se emplea la nomenclatura "<x-*nombre del componente* />"
+
+
+Video de componentes anónimos: https://www.youtube.com/watch?v=HHnMMBjQ8As&ab_channel=CodersFree
+
+Los componentes anónimos se crean directamente dentro de resources->views->components->*creación de archivo .blade.php* (No con comando " php artisan make:component *nombre del componente* " como en el caso de los de clase)
+*En este caso el componente anónimo fue el de alert2.blade.php
